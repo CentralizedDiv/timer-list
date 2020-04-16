@@ -48,6 +48,7 @@
       position: relative;
       padding: 12px;
       border-bottom: 1px solid $color-mirage;
+      background-color: $color-mirage;
       color: $color-mystic;
       font-size: 18px;
       max-height: 46px;
