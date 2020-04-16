@@ -47,7 +47,6 @@
       z-index: 1000;
       position: relative;
       padding: 12px;
-      background-color: $color-cod-gray;
       color: $color-mystic;
       font-size: 18px;
       max-height: 46px;
