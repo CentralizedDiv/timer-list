@@ -33,7 +33,7 @@
   .KeyPad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(5, 1fr) minmax(80px, auto);
+    grid-template-rows: 140px 1fr 80px;
     height: 100%;
 
     &-timePreview {
@@ -45,16 +45,17 @@
       color: $color-mystic;
       margin: 0 16px;
       position: relative;
-
       grid-column: 1 / 4;
 
       &Label {
         font-size: 20px;
       }
+
       & > div {
         display: flex;
         align-items: baseline;
       }
+
       button {
         font-size: 10px;
         margin-left: 12px;
@@ -72,6 +73,13 @@
       align-items: center;
       justify-content: center;
       font-size: 24px;
+
+      &Container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column: 1 / 4;
+        padding: 0 40px;
+      }
 
       &.isLast {
         grid-column: 1 / 4;
@@ -113,14 +121,16 @@
     </div>
     <button on:click={() => (input = '000000')}>Limpar</button>
   </div>
-  {#each numbers as number}
-    <div
-      class="KeyPad-number"
-      class:isLast={number === 0}
-      on:click={handleNumberClick.bind(null, number)}>
-      {number}
-    </div>
-  {/each}
+  <div class="KeyPad-numberContainer">
+    {#each numbers as number}
+      <div
+        class="KeyPad-number"
+        class:isLast={number === 0}
+        on:click={handleNumberClick.bind(null, number)}>
+        {number}
+      </div>
+    {/each}
+  </div>
   <div class="KeyPad-cancel">
     <button on:click={handleCancel}>Cancel</button>
   </div>
