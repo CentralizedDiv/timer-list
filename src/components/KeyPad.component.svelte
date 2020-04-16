@@ -33,7 +33,7 @@
   .KeyPad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 140px 1fr 80px;
+    grid-template-rows: 100px 1fr 80px;
     height: 100%;
 
     &-timePreview {
