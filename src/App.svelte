@@ -4,7 +4,7 @@
   import KeyPad from "./components/KeyPad.component.svelte";
   import { formatTime } from "./_utils";
 
-  let timer = 60;
+  let timer = 120;
   let shouldShowTimer = true;
   let shouldShowKeyPad = false;
 
@@ -36,8 +36,8 @@
   onDestroy(() => clearInterval(timerInterval));
 </script>
 
-<style lang="scss" global>
-  @import "./main.scss";
+<style lang="scss">
+  @import "./_utils/styles/main";
 
   .TimerList {
     text-align: center;

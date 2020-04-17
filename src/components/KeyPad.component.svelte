@@ -28,7 +28,7 @@
 </script>
 
 <style lang="scss">
-  @import "../main.scss";
+  @import "../_utils/styles/main";
 
   .KeyPad {
     display: grid;
@@ -37,9 +37,7 @@
     height: 100%;
 
     &-timePreview {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
       font-size: 40px;
       border-bottom: 1px solid $color-mystic;
       color: $color-mystic;
@@ -69,9 +67,7 @@
     }
 
     &-number {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
       font-size: 24px;
 
       &Container {
@@ -88,17 +84,7 @@
 
     &-cancel,
     &-confirm {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      button {
-        background: transparent;
-        border: none;
-        color: $color-white;
-        font-size: 14px;
-        margin: 0;
-      }
+      @include flex-center;
     }
   }
 </style>
