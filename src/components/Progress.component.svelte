@@ -32,7 +32,7 @@
       // Delays transition declaration to prevent user seeing the first strokeDasharray change
       setTimeout(() => {
         line.style.transition = "stroke-dashoffset 1.2s ease-in-out";
-      });
+      }, 999);
     }
 
     if (timer) {
