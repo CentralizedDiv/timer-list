@@ -1,7 +1,8 @@
 <script>
+  import KeyPad from "./components/KeyPad.component.svelte";
+  import Progress from "./components/Progress.component.svelte";
   import { onDestroy } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import KeyPad from "./components/KeyPad.component.svelte";
   import { formatTime } from "./_utils";
 
   let timer = 120;
@@ -80,7 +81,7 @@
       class="TimerList-currentTimer"
       in:fly={{ y: 200, duration: 300 }}
       out:fly={{ y: 200, duration: 300 }}>
-      <p>{formattedTimer}</p>
+      <Progress />
       <button on:click={() => toggleView('currentTimer')}>Add timer</button>
     </div>
   {/if}
