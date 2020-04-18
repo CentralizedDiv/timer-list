@@ -117,10 +117,6 @@
       </div>
     {/each}
   </div>
-  <div class="KeyPad-cancel">
-    <button on:click={handleCancel}>Cancel</button>
-  </div>
-  <div class="KeyPad-confirm">
-    <button on:click={handleConfirm}>Confirmar</button>
-  </div>
+  <button class="KeyPad-cancel" on:click={handleCancel}>Cancel</button>
+  <button class="KeyPad-confirm" on:click={handleConfirm}>Confirmar</button>
 </div>

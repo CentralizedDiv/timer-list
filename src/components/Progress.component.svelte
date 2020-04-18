@@ -1,37 +1,46 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import { formatTime } from "../_utils";
 
-  const width = Math.min(window.innerWidth * 0.6, 200);
-  const strokeWidth = "4";
-  const radius = width / 2 - strokeWidth * 2;
+  export let timer;
+
+  const radius = 48.5;
   const circumference = radius * 2 * Math.PI;
-  let innerCircle;
-  let outerCircle;
-  let timer = 0;
-  const timerInterval = setInterval(() => {
-    timer++;
-  }, 100);
+
+  let totalTimer;
+  let timerInterval;
+  let line;
+  let marker;
 
   function setProgress(percent) {
-    if (innerCircle && outerCircle) {
+    if (line && marker) {
       const offset = circumference + (percent / 100) * circumference;
-      innerCircle.style.strokeDashoffset = offset;
-
-      outerCircle.style.strokeDashoffset = offset - circumference;
+      line.style.strokeDashoffset = offset;
+      marker.style.transform = `rotate(-${(percent * 360) / 100}deg)`;
     }
   }
 
-  $: setProgress(timer);
-  $: if (timer === 100) {
-    clearInterval(timerInterval);
-  }
+  $: percentage = 100 - (timer * 100) / totalTimer;
+  $: if (timer > -1) setProgress(percentage);
+  $: formatted = timer ? formatTime(timer) : "";
 
   onMount(() => {
-    innerCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-    innerCircle.style.strokeDashoffset = circumference;
+    if (line) {
+      line.style.strokeDasharray = `${circumference} ${circumference}`;
+      line.style.strokeDashoffset = circumference;
 
-    outerCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-    outerCircle.style.strokeDashoffset = 0;
+      // Delays transition declaration to prevent user seeing the first strokeDasharray change
+      setTimeout(() => {
+        line.style.transition = "stroke-dashoffset 1.2s ease-in-out";
+      });
+    }
+
+    if (timer) {
+      totalTimer = timer;
+      timerInterval = setInterval(() => {
+        timer--;
+      }, 1000);
+    }
   });
   onDestroy(() => clearInterval(timerInterval));
 </script>
@@ -40,43 +49,49 @@
   @import "../_utils/styles/main";
 
   .Progress {
-    .progress-ring__circle {
-      transition: stroke-dashoffset 0.35s;
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
+    position: relative;
+
+    &-back {
+      stroke: $color-white;
+      stroke-width: 1;
+      fill: transparent;
     }
-    input {
-      display: block;
+
+    &-line {
+      transform: rotate(-90deg);
+      transform-origin: 50px 50px;
+
+      stroke: $color-boston-blue;
+      stroke-width: 2;
+      fill: transparent;
+      stroke-linecap: round;
+    }
+
+    &-marker {
+      fill: $color-boston-blue;
+      transform-origin: 50px 50px;
+      transform: rotate(0deg);
+      transition: transform 1.2s ease-in-out;
+    }
+
+    &-text {
+      @include flex-center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      font-size: 32px;
+      font-weight: 500;
+      color: $color-boston-blue;
     }
   }
 </style>
 
 <div class="Progress">
-  <svg class="progress-ring" {width} height={width}>
-    <circle
-      bind:this={outerCircle}
-      class="progress-ring__circle"
-      stroke="#dde4e9"
-      stroke-width={strokeWidth}
-      stroke-linecap="round"
-      fill="transparent"
-      r={radius}
-      cx={width / 2}
-      cy={width / 2} />
-    <circle
-      bind:this={innerCircle}
-      class="progress-ring__circle"
-      stroke="#3282b8"
-      stroke-linecap="round"
-      stroke-width={strokeWidth}
-      fill="transparent"
-      r={radius}
-      cx={width / 2}
-      cy={width / 2} />
+  <svg width="200px" viewBox="-5 -5 110 110">
+    <circle class="Progress-back" r="48.5" cx="50" cy="50" />
+    <circle bind:this={line} class="Progress-line" r="48.5" cx="50" cy="50" />
+    <circle bind:this={marker} class="Progress-marker" r="3" cx="50" cy="1.5" />
   </svg>
-  <input
-    type="number"
-    min="0"
-    max="100"
-    on:change={ev => setProgress(ev.target.value)} />
+  <div class="Progress-text">{formatted}</div>
 </div>

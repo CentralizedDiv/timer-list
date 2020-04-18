@@ -1,17 +1,11 @@
 <script>
   import KeyPad from "./components/KeyPad.component.svelte";
   import Progress from "./components/Progress.component.svelte";
-  import { onDestroy } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import { formatTime } from "./_utils";
 
-  let timer = 120;
+  let timer;
   let shouldShowTimer = true;
   let shouldShowKeyPad = false;
-
-  const timerInterval = setInterval(() => {
-    timer--;
-  }, 1000);
 
   function toggleView(view) {
     if (view === "keyPad") {
@@ -31,10 +25,6 @@
     timer = detail.time;
     toggleView("keyPad");
   }
-
-  $: formattedTimer = formatTime(timer);
-
-  onDestroy(() => clearInterval(timerInterval));
 </script>
 
 <style lang="scss">
@@ -59,6 +49,20 @@
     &-keyPad {
       height: calc(100% - 46px);
     }
+
+    &-currentTimer {
+      display: grid;
+      grid-template-rows: auto 80px;
+    }
+
+    &-progress {
+      @include flex-center;
+    }
+
+    &-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 </style>
 
@@ -81,8 +85,12 @@
       class="TimerList-currentTimer"
       in:fly={{ y: 200, duration: 300 }}
       out:fly={{ y: 200, duration: 300 }}>
-      <Progress />
-      <button on:click={() => toggleView('currentTimer')}>Add timer</button>
+      <div class="TimerList-progress">
+        <Progress {timer} />
+      </div>
+      <div class="TimerList-actions">
+        <button on:click={() => toggleView('currentTimer')}>Add timer</button>
+      </div>
     </div>
   {/if}
 
