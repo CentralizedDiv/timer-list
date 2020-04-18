@@ -80,7 +80,7 @@
       width: 100%;
       height: 100%;
       top: 0;
-      font-size: 32px;
+      font-size: 50px;
       font-weight: 500;
       color: $color-boston-blue;
     }
@@ -88,7 +88,7 @@
 </style>
 
 <div class="Progress">
-  <svg width="200px" viewBox="-5 -5 110 110">
+  <svg width="300px" viewBox="-5 -5 110 110">
     <circle class="Progress-back" r="48.5" cx="50" cy="50" />
     <circle bind:this={line} class="Progress-line" r="48.5" cx="50" cy="50" />
     <circle bind:this={marker} class="Progress-marker" r="3" cx="50" cy="1.5" />
