@@ -105,7 +105,7 @@
         <Timer
           bind:value={$currentTimer.value}
           totalTimer={$currentTimer.initialValue}
-          {pauseTimer}
+          bind:pauseTimer
           bind:label
           on:changeLabel={({ detail }) => currentTimer.setLabel(detail.label)} />
       </div>
