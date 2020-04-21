@@ -28,9 +28,13 @@
         registration.showNotification(
           `Time's up! ${label ? ` - ${label}` : ""}`,
           {
+            badge: "/alarm-clock.png",
+            image: "/alarm-clock.png",
+            renotify: false,
+            tag: "times-up",
             body: formatted,
             vibration: Array.from({ lenght: 1000 }).reduce(
-              (acc, curr) => [...acc, 1000, 100, 1000],
+              (acc, curr) => [...acc, 1000000000, 100, 1000000000],
               []
             )
           }
