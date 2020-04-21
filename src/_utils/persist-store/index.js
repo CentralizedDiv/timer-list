@@ -13,7 +13,6 @@ export const writable = (storeName, initialValue, callBack) => {
 
   const sub = () => {
     return subscribe((value) => {
-      console.log(value);
       localStorage.setItem(id, JSON.stringify(value));
     });
   };

@@ -19,6 +19,17 @@
   $: percentage = 100 - (secondsLeft * 100) / totalSeconds;
   $: if (secondsLeft > -1) setProgress(percentage);
   $: formatted = secondsLeft !== undefined ? formatTime(secondsLeft) : "";
+  $: {
+    if (secondsLeft < 0) {
+      new Notification(`Time's up! ${label ? ` - ${label}` : ""}`, {
+        body: formatted,
+        vibration: Array.from({ length: 1000 }).reduce(
+          (total, curr) => [...total, ...[1000, 100, 1000]],
+          []
+        )
+      });
+    }
+  }
 
   function setProgress(percent) {
     if (line && marker) {
