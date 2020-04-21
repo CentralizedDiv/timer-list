@@ -25,13 +25,6 @@
       const context = getContext(key);
       const registration = context.getRegistration();
       if (registration) {
-        registration
-          .getNotifications({ tag: "times-up" })
-          .then((notifications, key) => {
-            notifications.forEach(notification => {
-              notification.close();
-            });
-          });
         // Get Notification and replace
         registration.showNotification(
           `Time's up! ${label ? ` - ${label}` : ""}`,
