@@ -33,8 +33,8 @@
             renotify: false,
             tag: "times-up",
             body: formatted,
-            vibration: Array.from({ lenght: 1000 }).reduce(
-              (acc, curr) => [...acc, 1000000000, 100, 1000000000],
+            vibration: Array.from({ length: 1000 }).reduce(
+              acc => [...acc, ...[10000000, 100, 10000000]],
               []
             )
           }
