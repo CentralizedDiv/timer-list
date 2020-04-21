@@ -1,5 +1,3 @@
-@import "./mixins";
-
 $color-mirage: #0c1013;
 $color-cod-gray: #1a1a1a;
 $color-chathams-blue: #0f4c75;
@@ -7,4 +5,7 @@ $color-boston-blue: #50aaff;
 $color-sail-blue: #bbe1fa;
 $color-mystic: #dde4e9;
 $color-shuttle-gray: #3b3c3c;
+$color-gray: #9ea4a9;
 $color-white: #ffffff;
+
+@import "./mixins";

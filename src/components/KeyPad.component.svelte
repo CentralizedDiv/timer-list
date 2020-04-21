@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { currentTimer } from "../store";
   const dispatch = createEventDispatcher();
 
   let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -109,14 +110,24 @@
   </div>
   <div class="KeyPad-numberContainer">
     {#each numbers as number}
-      <div
+      <button
         class="KeyPad-number"
         class:isLast={number === 0}
         on:click={handleNumberClick.bind(null, number)}>
         {number}
-      </div>
+      </button>
     {/each}
   </div>
-  <button class="KeyPad-cancel" on:click={handleCancel}>Cancel</button>
-  <button class="KeyPad-confirm" on:click={handleConfirm}>Confirmar</button>
+  <button
+    class="KeyPad-cancel"
+    on:click={handleCancel}
+    disabled={input === '000000' && $currentTimer === undefined}>
+    Cancel
+  </button>
+  <button
+    class="KeyPad-confirm"
+    on:click={handleConfirm}
+    disabled={input === '000000'}>
+    Confirmar
+  </button>
 </div>

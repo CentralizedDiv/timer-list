@@ -3,14 +3,14 @@ export function formatTime(_seconds, returnObject = false) {
     throw new Error("Invalid number of seconds");
   }
 
-  let aux = _seconds / 60;
+  let aux = Math.abs(_seconds) / 60;
 
   let hours = 0;
   let minutes = Math.floor(aux);
-  let seconds = _seconds - minutes * 60;
+  let seconds = Math.abs(_seconds) - minutes * 60;
 
-  if (_seconds < 60) {
-    seconds = _seconds;
+  if (Math.abs(_seconds) < 60) {
+    seconds = Math.abs(_seconds);
   }
 
   if (minutes >= 60) {
@@ -21,16 +21,31 @@ export function formatTime(_seconds, returnObject = false) {
 
   let formatted = "";
 
+  let formattedHours;
   if (hours > 0) {
-    hours = hours.toString().padStart(2, "0") + ":";
-    formatted += hours;
+    formattedHours = hours.toString().padStart(2, "0") + ":";
+    formatted += formattedHours;
   }
 
-  minutes = minutes.toString().padStart(2, "0") + ":";
-  formatted += minutes;
+  const formattedMinutes = minutes.toString().padStart(2, "0") + ":";
+  formatted += formattedMinutes;
 
-  seconds = seconds.toString().padStart(2, "0");
-  formatted += seconds;
+  const formattedSeconds = seconds.toString().padStart(2, "0");
+  formatted += formattedSeconds;
+
+  // Format negative values
+  if (_seconds < 0) {
+    formatted = "-";
+    if (hours > 0) {
+      formatted += formattedHours;
+    }
+    if (hours > 0 || minutes > 0) {
+      formatted += formattedMinutes;
+      formatted += formattedSeconds;
+    } else {
+      formatted += seconds.toString();
+    }
+  }
 
   if (returnObject) {
     return {
@@ -40,4 +55,18 @@ export function formatTime(_seconds, returnObject = false) {
     };
   }
   return formatted;
+}
+
+export function generateId(string) {
+  var hash = 0,
+    i,
+    chr,
+    len;
+  if (string.length === 0) return hash;
+  for (i = 0, len = string.length; i < len; i++) {
+    chr = string.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return "_" + hash.toString(36);
 }

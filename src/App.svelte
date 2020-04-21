@@ -1,11 +1,16 @@
 <script>
-  import KeyPad from "./components/KeyPad.component.svelte";
-  import Progress from "./components/Progress.component.svelte";
   import { fade, fly } from "svelte/transition";
+  import { onMount } from "svelte";
+  import { currentTimer } from "./store";
+  import { persistStore } from "./_utils/hooks";
+  import KeyPad from "./components/KeyPad.component.svelte";
+  import Timer from "./components/Timer.component.svelte";
 
-  let timer;
-  let shouldShowTimer = true;
-  let shouldShowKeyPad = false;
+  let transitionsDuration = 0;
+  let pauseTimer = false;
+  $: label = $currentTimer && $currentTimer.label;
+  $: shouldShowTimer = $currentTimer && $currentTimer.value !== undefined;
+  $: shouldShowKeyPad = $currentTimer && $currentTimer.value === undefined;
 
   function toggleView(view) {
     if (view === "keyPad") {
@@ -22,9 +27,18 @@
   }
 
   function handleConfirm({ detail }) {
-    timer = detail.time;
+    currentTimer.set({ value: detail.time });
     toggleView("keyPad");
   }
+
+  onMount(() => {
+    // Delay transitions declaration
+    setTimeout(() => {
+      transitionsDuration = 300;
+    }, 100);
+  });
+
+  persistStore({ currentTimer });
 </script>
 
 <style lang="scss">
@@ -33,6 +47,8 @@
   .TimerList {
     text-align: center;
     height: 100%;
+    max-width: 600px;
+    margin: 0 auto;
 
     &-header {
       z-index: 1000;
@@ -55,7 +71,7 @@
       grid-template-rows: auto 80px;
     }
 
-    &-progress {
+    &-timer {
       @include flex-center;
     }
 
@@ -73,8 +89,8 @@
   {#if shouldShowKeyPad}
     <div
       class="TimerList-keyPad"
-      in:fly={{ y: -200, duration: 300 }}
-      out:fly={{ y: -200, duration: 300 }}>
+      in:fly={{ y: -200, duration: transitionsDuration }}
+      out:fly={{ y: -200, duration: transitionsDuration }}>
       <KeyPad
         on:cancel={() => toggleView('keyPad')}
         on:confirm={handleConfirm} />
@@ -83,13 +99,21 @@
   {#if shouldShowTimer}
     <div
       class="TimerList-currentTimer"
-      in:fly={{ y: 200, duration: 300 }}
-      out:fly={{ y: 200, duration: 300 }}>
-      <div class="TimerList-progress">
-        <Progress {timer} />
+      in:fly={{ y: 200, duration: transitionsDuration }}
+      out:fly={{ y: 200, duration: transitionsDuration }}>
+      <div class="TimerList-timer">
+        <Timer
+          bind:value={$currentTimer.value}
+          {pauseTimer}
+          bind:label
+          on:changeLabel={({ detail }) => currentTimer.setLabel(detail.label)} />
       </div>
       <div class="TimerList-actions">
         <button on:click={() => toggleView('currentTimer')}>Add timer</button>
+        <button on:click={() => (pauseTimer = !pauseTimer)}>
+          {pauseTimer ? 'Play' : 'Pause'}
+        </button>
+        <button on:click={() => currentTimer.set()}>Delete</button>
       </div>
     </div>
   {/if}
