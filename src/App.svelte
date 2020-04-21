@@ -2,15 +2,15 @@
   import { fade, fly } from "svelte/transition";
   import { onMount } from "svelte";
   import { currentTimer } from "./store";
-  import { persistStore } from "./_utils/hooks";
+  import { persistStore } from "./_utils/persist-store";
   import KeyPad from "./components/KeyPad.component.svelte";
   import Timer from "./components/Timer.component.svelte";
 
   let transitionsDuration = 0;
   let pauseTimer = false;
-  $: label = $currentTimer && $currentTimer.label;
-  $: shouldShowTimer = $currentTimer && $currentTimer.value !== undefined;
-  $: shouldShowKeyPad = $currentTimer && $currentTimer.value === undefined;
+
+  $: shouldShowTimer = $currentTimer.secondsLeft !== undefined;
+  $: shouldShowKeyPad = $currentTimer.secondsLeft === undefined;
 
   function toggleView(view) {
     if (view === "keyPad") {
@@ -27,9 +27,13 @@
   }
 
   function handleConfirm({ detail }) {
-    currentTimer.set(detail.time);
+    if ($currentTimer.totalSeconds === undefined)
+      currentTimer.setTotalSeconds(detail.time);
+    currentTimer.setSecondsLeft(detail.time);
     toggleView("keyPad");
   }
+
+  persistStore({ currentTimer });
 
   onMount(() => {
     // Delay transitions declaration
@@ -37,8 +41,6 @@
       transitionsDuration = 300;
     }, 100);
   });
-
-  persistStore({ currentTimer });
 </script>
 
 <style lang="scss">
@@ -103,10 +105,11 @@
       out:fly={{ y: 200, duration: transitionsDuration }}>
       <div class="TimerList-timer">
         <Timer
-          bind:value={$currentTimer.value}
-          totalTimer={$currentTimer.initialValue}
           bind:pauseTimer
-          bind:label
+          secondsLeft={$currentTimer.secondsLeft}
+          on:changeSecondsLeft={({ detail }) => currentTimer.setSecondsLeft(detail.secondsLeft)}
+          totalSeconds={$currentTimer.totalSeconds}
+          label={$currentTimer.label}
           on:changeLabel={({ detail }) => currentTimer.setLabel(detail.label)} />
       </div>
       <div class="TimerList-actions">
@@ -114,7 +117,7 @@
         <button on:click={() => (pauseTimer = !pauseTimer)}>
           {pauseTimer ? 'Play' : 'Pause'}
         </button>
-        <button on:click={() => currentTimer.set()}>Delete</button>
+        <button on:click={() => currentTimer.remove()}>Delete</button>
       </div>
     </div>
   {/if}

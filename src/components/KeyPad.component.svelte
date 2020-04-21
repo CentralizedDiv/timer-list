@@ -1,10 +1,15 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { currentTimer } from "../store";
+
   const dispatch = createEventDispatcher();
 
   let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   let input = "000000";
+
+  $: seconds = input.slice(4, 6).padStart(2, "0");
+  $: minutes = input.slice(2, 4).padStart(2, "0");
+  $: hours = input.slice(0, 2).padStart(2, "0");
 
   function handleNumberClick(number) {
     if (input.charAt(0) === "0") {
@@ -22,10 +27,6 @@
       time: parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600
     });
   }
-
-  $: seconds = input.slice(4, 6).padStart(2, "0");
-  $: minutes = input.slice(2, 4).padStart(2, "0");
-  $: hours = input.slice(0, 2).padStart(2, "0");
 </script>
 
 <style lang="scss">

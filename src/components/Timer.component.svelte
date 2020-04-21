@@ -1,27 +1,26 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { createEventDispatcher } from "svelte";
-  import DialogInput from "./DialogInput.component.svelte";
   import { formatTime } from "../_utils";
+  import DialogInput from "./DialogInput.component.svelte";
 
   const dispatch = createEventDispatcher();
-
-  export let value;
-  export let totalTimer;
-  export let pauseTimer;
-  export let label = "Label";
-
   const radius = 48.5;
   const circumference = radius * 2 * Math.PI;
+
+  export let secondsLeft;
+  export let totalSeconds;
+  export let pauseTimer;
+  export let label = "Label";
 
   let timerInterval;
   let line;
   let marker;
   let showDialogInput;
 
-  $: percentage = 100 - (value * 100) / totalTimer;
-  $: if (value > -1) setProgress(percentage);
-  $: formatted = value !== undefined ? formatTime(value) : "";
+  $: percentage = 100 - (secondsLeft * 100) / totalSeconds;
+  $: if (secondsLeft > -1) setProgress(percentage);
+  $: formatted = secondsLeft !== undefined ? formatTime(secondsLeft) : "";
 
   function setProgress(percent) {
     if (line && marker) {
@@ -33,7 +32,7 @@
 
   function handleReset() {
     pauseTimer = true;
-    value = totalTimer;
+    secondsLeft = totalSeconds;
     setTimeout(() => {
       pauseTimer = false;
     }, 1200);
@@ -50,11 +49,12 @@
       }, 999);
     }
 
-    if (value) {
-      totalTimer = value;
+    if (secondsLeft) {
+      totalSeconds = secondsLeft;
       timerInterval = setInterval(() => {
         if (!pauseTimer) {
-          value--;
+          secondsLeft--;
+          dispatch("changeSecondsLeft", { secondsLeft });
         }
       }, 1000);
     }
@@ -133,11 +133,11 @@
     <DialogInput
       on:cancel={() => (showDialogInput = false)}
       on:ok={({ detail }) => {
-        label = detail.value;
+        label = detail.label;
         showDialogInput = false;
         dispatch('changeLabel', { label });
       }}
-      value={label === 'Label' ? '' : label} />
+      {label} />
   {/if}
   <svg width="300px" viewBox="-5 -5 110 110">
     <circle class="Timer-back" r="48.5" cx="50" cy="50" />

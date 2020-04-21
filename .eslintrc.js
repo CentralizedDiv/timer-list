@@ -14,10 +14,4 @@ module.exports = {
       processor: "svelte3/svelte3",
     },
   ],
-  rules: {
-    // ...
-  },
-  settings: {
-    // ...
-  },
 };

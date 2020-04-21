@@ -1,40 +1,24 @@
-import { writable } from "svelte/store";
+import { writable } from "../_utils/persist-store";
 
 function createCurrentTimer() {
-  let initialValue;
-  const { subscribe, set, update } = writable({ FIRST_CHANGE: true });
+  const { subscribe, set, update, remove } = writable({});
 
-  const _update = (v) => {
-    update((curr) => ({ ...curr, FIRST_CHANGE: false }));
-    return update(v);
+  const setProperty = (property, value) => {
+    update((curr) => ({
+      ...curr,
+      [property]: value,
+    }));
   };
+
   return {
     subscribe,
-    update: _update,
-    set: (value) => {
-      if (value === undefined) {
-      }
-      if (typeof value === "object") {
-        _update((current) => ({ ...current, ...value }));
-      } else {
-        if (initialValue === undefined) {
-          initialValue = value;
-        }
-        _update((current) => ({
-          ...current,
-          value,
-          initialValue: value,
-          DELETE: value === undefined,
-        }));
-      }
-    },
-    setLabel: (label) => {
-      _update((current) => ({ ...current, label }));
-    },
-    reset: () => {
-      _update((current) => ({ ...current, value: current.initialValue }));
-      initialValue = undefined;
-    },
+    set,
+    remove,
+    setSecondsLeft: (v) => setProperty("secondsLeft", v),
+    setTotalSeconds: (v) => setProperty("totalSeconds", v),
+    setLabel: (v) => setProperty("label", v),
+    reset: () =>
+      update((curr) => ({ ...curr, secondsLeft: curr.totalSeconds })),
   };
 }
 

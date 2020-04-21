@@ -3,9 +3,9 @@
   const dispatch = createEventDispatcher();
 
   const cancel = () => dispatch("cancel");
-  const ok = () => dispatch("ok", { value });
+  const ok = () => dispatch("ok", { label });
 
-  export let value = "";
+  export let label = "";
 </script>
 
 <style lang="scss">
@@ -82,7 +82,11 @@
 
 <div class="DialogInput-content">
   <label class="DialogInput-input" for="DialogInput_input">
-    <input id="DialogInput_input" type="text" bind:value placeholder="Label" />
+    <input
+      id="DialogInput_input"
+      type="text"
+      bind:value={label}
+      placeholder="Label" />
     <span>Label</span>
   </label>
   <button on:click={cancel}>Cancel</button>
