@@ -18,6 +18,9 @@ export function persistStore(stores) {
       if (!v.FIRST_CHANGE) {
         localStorage.setItem(id, JSON.stringify(v));
       }
+      if (v.DELETE) {
+        localStorage.removeItem(id);
+      }
     });
   });
 }

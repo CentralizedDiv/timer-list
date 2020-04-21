@@ -7,13 +7,13 @@
   const dispatch = createEventDispatcher();
 
   export let value;
+  export let totalTimer;
   export let pauseTimer;
   export let label = "Label";
 
   const radius = 48.5;
   const circumference = radius * 2 * Math.PI;
 
-  let totalTimer;
   let timerInterval;
   let line;
   let marker;

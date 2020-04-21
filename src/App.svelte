@@ -27,7 +27,7 @@
   }
 
   function handleConfirm({ detail }) {
-    currentTimer.set({ value: detail.time });
+    currentTimer.set(detail.time);
     toggleView("keyPad");
   }
 
@@ -104,6 +104,7 @@
       <div class="TimerList-timer">
         <Timer
           bind:value={$currentTimer.value}
+          totalTimer={$currentTimer.initialValue}
           {pauseTimer}
           bind:label
           on:changeLabel={({ detail }) => currentTimer.setLabel(detail.label)} />

@@ -12,20 +12,27 @@ function createCurrentTimer() {
     subscribe,
     update: _update,
     set: (value) => {
-      if (initialValue === undefined) {
-        initialValue = value;
+      if (value === undefined) {
       }
       if (typeof value === "object") {
         _update((current) => ({ ...current, ...value }));
       } else {
-        _update((current) => ({ ...current, value }));
+        if (initialValue === undefined) {
+          initialValue = value;
+        }
+        _update((current) => ({
+          ...current,
+          value,
+          initialValue: value,
+          DELETE: value === undefined,
+        }));
       }
     },
     setLabel: (label) => {
       _update((current) => ({ ...current, label }));
     },
     reset: () => {
-      _update((current) => ({ ...current, value: initialValue }));
+      _update((current) => ({ ...current, value: current.initialValue }));
       initialValue = undefined;
     },
   };
