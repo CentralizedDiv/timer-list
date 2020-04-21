@@ -1,6 +1,7 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, getContext } from "svelte";
   import { formatTime } from "../_utils";
+  import { key } from "../notifications";
   import DialogInput from "./DialogInput.component.svelte";
 
   const radius = 48.5;
@@ -21,9 +22,20 @@
   $: formatted = secondsLeft !== undefined ? formatTime(secondsLeft) : "";
   $: {
     if (secondsLeft < 0) {
-      new Notification(`Time's up! ${label ? ` - ${label}` : ""}`, {
-        body: formatted
-      });
+      const context = getContext(key);
+      const registration = context.getRegistration();
+      if (registration) {
+        registration.showNotification(
+          `Time's up! ${label ? ` - ${label}` : ""}`,
+          {
+            body: formatted,
+            vibration: Array.from({ lenght: 1000 }).reduce(
+              (acc, curr) => [...acc, 1000, 100, 1000],
+              []
+            )
+          }
+        );
+      }
     }
   }
 

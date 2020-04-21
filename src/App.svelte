@@ -1,12 +1,18 @@
 <script>
   import { fade, fly } from "svelte/transition";
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { currentTimer } from "./store";
+  import { registerNotifications, key } from "./notifications";
   import KeyPad from "./components/KeyPad.component.svelte";
   import Timer from "./components/Timer.component.svelte";
 
+  setContext(key, {
+    getRegistration: () => registration
+  });
+
   let transitionsDuration = 0;
   let pauseTimer = false;
+  let registration;
 
   $: shouldShowTimer = $currentTimer.secondsLeft !== undefined;
   $: shouldShowKeyPad = $currentTimer.secondsLeft === undefined;
@@ -32,7 +38,8 @@
     toggleView("keyPad");
   }
 
-  onMount(() => {
+  onMount(async () => {
+    registration = await registerNotifications();
     // Delay transitions declaration
     setTimeout(() => {
       transitionsDuration = 300;
