@@ -9,7 +9,7 @@
   export let secondsLeft;
   export let totalSeconds;
   export let pauseTimer;
-  export let label;
+  export let label = undefined;
 
   let timerInterval;
   let line;
@@ -22,11 +22,7 @@
   $: {
     if (secondsLeft < 0) {
       new Notification(`Time's up! ${label ? ` - ${label}` : ""}`, {
-        body: formatted,
-        vibration: Array.from({ length: 1000 }).reduce(
-          (total, curr) => [...total, ...[1000, 100, 1000]],
-          []
-        )
+        body: formatted
       });
     }
   }
