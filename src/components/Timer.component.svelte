@@ -30,13 +30,10 @@
           {
             badge: "/alarm-clock.png",
             image: "/alarm-clock.png",
-            renotify: false,
+            renotify: true,
             tag: "times-up",
             body: formatted,
-            vibration: Array.from({ length: 1000 }).reduce(
-              acc => [...acc, ...[10000000, 100, 10000000]],
-              []
-            )
+            vibration: [10000000, 100, 10000000]
           }
         );
       }
