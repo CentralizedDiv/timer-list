@@ -1,17 +1,15 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { createEventDispatcher } from "svelte";
   import { formatTime } from "../_utils";
   import DialogInput from "./DialogInput.component.svelte";
 
-  const dispatch = createEventDispatcher();
   const radius = 48.5;
   const circumference = radius * 2 * Math.PI;
 
   export let secondsLeft;
   export let totalSeconds;
   export let pauseTimer;
-  export let label = "Label";
+  export let label;
 
   let timerInterval;
   let line;
@@ -54,7 +52,6 @@
       timerInterval = setInterval(() => {
         if (!pauseTimer) {
           secondsLeft--;
-          dispatch("changeSecondsLeft", { secondsLeft });
         }
       }, 1000);
     }
@@ -135,7 +132,6 @@
       on:ok={({ detail }) => {
         label = detail.label;
         showDialogInput = false;
-        dispatch('changeLabel', { label });
       }}
       {label} />
   {/if}

@@ -1,7 +1,7 @@
 import { writable } from "../_utils/persist-store";
 
 function createCurrentTimer() {
-  const { subscribe, set, update, remove } = writable({});
+  const { subscribe, set, update, remove } = writable("currentTimer", {});
 
   const setProperty = (property, value) => {
     update((curr) => ({

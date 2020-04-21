@@ -2,7 +2,6 @@
   import { fade, fly } from "svelte/transition";
   import { onMount } from "svelte";
   import { currentTimer } from "./store";
-  import { persistStore } from "./_utils/persist-store";
   import KeyPad from "./components/KeyPad.component.svelte";
   import Timer from "./components/Timer.component.svelte";
 
@@ -32,8 +31,6 @@
     currentTimer.setSecondsLeft(detail.time);
     toggleView("keyPad");
   }
-
-  persistStore({ currentTimer });
 
   onMount(() => {
     // Delay transitions declaration
@@ -106,11 +103,9 @@
       <div class="TimerList-timer">
         <Timer
           bind:pauseTimer
-          secondsLeft={$currentTimer.secondsLeft}
-          on:changeSecondsLeft={({ detail }) => currentTimer.setSecondsLeft(detail.secondsLeft)}
           totalSeconds={$currentTimer.totalSeconds}
-          label={$currentTimer.label}
-          on:changeLabel={({ detail }) => currentTimer.setLabel(detail.label)} />
+          bind:secondsLeft={$currentTimer.secondsLeft}
+          bind:label={$currentTimer.label} />
       </div>
       <div class="TimerList-actions">
         <button on:click={() => toggleView('currentTimer')}>Add timer</button>
