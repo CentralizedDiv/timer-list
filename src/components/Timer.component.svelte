@@ -25,15 +25,21 @@
       const context = getContext(key);
       const registration = context.getRegistration();
       if (registration) {
+        registration
+          .getNotifications({ tag: "times-up" })
+          .then((notifications, key) => {
+            notifications.forEach(notification => {
+              notification.close();
+            });
+          });
+        // Get Notification and replace
         registration.showNotification(
           `Time's up! ${label ? ` - ${label}` : ""}`,
           {
             badge: "/alarm-clock.png",
-            image: "/alarm-clock.png",
-            renotify: true,
             tag: "times-up",
             body: formatted,
-            vibration: [10000000, 100, 10000000]
+            vibration: [300, 100, 400]
           }
         );
       }
