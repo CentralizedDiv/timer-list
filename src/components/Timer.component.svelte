@@ -30,9 +30,15 @@
           `Time's up! ${label ? ` - ${label}` : ""}`,
           {
             badge: "/alarm-clock.png",
+            icon: "/alarm-clock.png",
             tag: "times-up",
+            renotify: false,
             body: formatted,
-            vibration: [300, 100, 400]
+            vibrate: Array.from({ length: 1000 }).reduce(
+              (a, b) => [...a, ...[10000000, 100, 10000000]],
+              []
+            ),
+            requireInteraction: true
           }
         );
       }
