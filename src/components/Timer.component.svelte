@@ -32,12 +32,9 @@
             badge: "/alarm-clock.png",
             icon: "/alarm-clock.png",
             tag: "times-up",
-            renotify: false,
+            renotify: true,
             body: formatted,
-            vibrate: Array.from({ length: 1000 }).reduce(
-              (a, b) => [...a, ...[10000000, 100, 10000000]],
-              []
-            ),
+            vibrate: [1000, 100, 1000],
             requireInteraction: true
           }
         );
