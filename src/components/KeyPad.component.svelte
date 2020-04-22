@@ -122,7 +122,7 @@
   <button
     class="KeyPad-cancel"
     on:click={handleCancel}
-    disabled={$currentTimer.value === undefined}>
+    disabled={$currentTimer.secondsLeft === undefined}>
     Cancel
   </button>
   <button

@@ -2,9 +2,15 @@ import { onDestroy, onMount } from "svelte";
 import { writable as SvelteWriteble } from "svelte/store";
 import { generateId } from "..";
 
-export const writable = (storeName, initialValue, callBack) => {
+export const writable = (
+  storeName,
+  initialValue,
+  callBack,
+  getPersistedDataCallback = () => {}
+) => {
   const id = generateId(storeName);
   const persistedValue = localStorage.getItem(id);
+  getPersistedDataCallback(persistedValue ? JSON.parse(persistedValue) : {});
 
   const { subscribe, set, update } = SvelteWriteble(
     persistedValue ? JSON.parse(persistedValue) : initialValue,
@@ -45,6 +51,9 @@ export const writable = (storeName, initialValue, callBack) => {
       $$deleted = true;
       unsubscribe();
       return set(initialValue);
+    },
+    get: () => {
+      return localStorage.getItem(id) ? localStorage.getItem(id) : null;
     },
   };
 };

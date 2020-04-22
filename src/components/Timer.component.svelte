@@ -1,15 +1,21 @@
 <script>
-  import { onMount, onDestroy, getContext } from "svelte";
+  import {
+    onMount,
+    onDestroy,
+    getContext,
+    createEventDispatcher
+  } from "svelte";
   import { formatTime } from "../_utils";
   import { key } from "../notifications";
   import DialogInput from "./DialogInput.component.svelte";
 
+  const dispatch = createEventDispatcher();
   const radius = 48.5;
   const circumference = radius * 2 * Math.PI;
 
   export let secondsLeft;
   export let totalSeconds;
-  export let pauseTimer;
+  export let paused;
   export let label = undefined;
 
   let timerInterval;
@@ -30,11 +36,10 @@
           `Time's up! ${label ? ` - ${label}` : ""}`,
           {
             badge: "/alarm-clock.png",
-            icon: "/alarm-clock.png",
             tag: "times-up",
             renotify: true,
             body: formatted,
-            vibrate: [1000, 100, 1000],
+            vibrate: [1000],
             requireInteraction: true
           }
         );
@@ -51,11 +56,7 @@
   }
 
   function handleReset() {
-    pauseTimer = true;
-    secondsLeft = totalSeconds;
-    setTimeout(() => {
-      pauseTimer = false;
-    }, 1200);
+    dispatch("reset");
   }
 
   onMount(() => {
@@ -63,19 +64,17 @@
       line.style.strokeDasharray = `${circumference} ${circumference}`;
       line.style.strokeDashoffset = circumference;
 
+      if (secondsLeft > -1) {
+        setProgress(percentage);
+      } else {
+        setProgress(100);
+      }
+
       // Delays transition declaration to prevent user seeing the first strokeDasharray change
       setTimeout(() => {
         line.style.transition = "stroke-dashoffset 1.2s ease-in-out";
+        marker.style.transition = "transform 1.2s ease-in-out";
       }, 999);
-    }
-
-    if (secondsLeft) {
-      totalSeconds = secondsLeft;
-      timerInterval = setInterval(() => {
-        if (!pauseTimer) {
-          secondsLeft--;
-        }
-      }, 1000);
     }
   });
 
@@ -108,7 +107,6 @@
       fill: $color-boston-blue;
       transform-origin: 50px 50px;
       transform: rotate(0deg);
-      transition: transform 1.2s ease-in-out;
     }
 
     &-text {
@@ -165,6 +163,6 @@
   <button class="Timer-labelButton" on:click={() => (showDialogInput = true)}>
     {label || 'Label'}
   </button>
-  <div class="Timer-text" class:isPaused={pauseTimer}>{formatted}</div>
+  <div class="Timer-text" class:isPaused={paused}>{formatted}</div>
   <button class="Timer-resetButton" on:click={handleReset}>Reset</button>
 </div>

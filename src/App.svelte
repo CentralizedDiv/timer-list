@@ -11,19 +11,17 @@
   });
 
   let transitionsDuration = 0;
-  let pauseTimer = false;
   let registration;
-
-  $: shouldShowTimer = $currentTimer.secondsLeft !== undefined;
-  $: shouldShowKeyPad = $currentTimer.secondsLeft === undefined;
+  let shouldShowTimer = $currentTimer.secondsLeft !== undefined;
+  let shouldShowKeyPad = $currentTimer.secondsLeft === undefined;
 
   function toggleView(view) {
-    if (view === "keyPad") {
+    if (view === "currentTimer") {
       shouldShowKeyPad = false;
       setTimeout(() => {
         shouldShowTimer = true;
       }, 200);
-    } else if (view === "currentTimer") {
+    } else if (view === "keyPad") {
       shouldShowTimer = false;
       setTimeout(() => {
         shouldShowKeyPad = true;
@@ -32,14 +30,15 @@
   }
 
   function handleConfirm({ detail }) {
-    if ($currentTimer.totalSeconds === undefined)
-      currentTimer.setTotalSeconds(detail.time);
-    currentTimer.setSecondsLeft(detail.time);
-    toggleView("keyPad");
+    currentTimer.start(detail.time);
+    currentTimer.startTimer();
+    toggleView("currentTimer");
   }
 
   onMount(async () => {
     registration = await registerNotifications();
+    currentTimer.startTimer();
+
     // Delay transitions declaration
     setTimeout(() => {
       transitionsDuration = 300;
@@ -98,7 +97,7 @@
       in:fly={{ y: -200, duration: transitionsDuration }}
       out:fly={{ y: -200, duration: transitionsDuration }}>
       <KeyPad
-        on:cancel={() => toggleView('keyPad')}
+        on:cancel={() => toggleView('currentTimer')}
         on:confirm={handleConfirm} />
     </div>
   {/if}
@@ -109,17 +108,29 @@
       out:fly={{ y: 200, duration: transitionsDuration }}>
       <div class="TimerList-timer">
         <Timer
-          bind:pauseTimer
+          on:reset={currentTimer.reset}
+          secondsLeft={$currentTimer.secondsLeft}
           totalSeconds={$currentTimer.totalSeconds}
-          bind:secondsLeft={$currentTimer.secondsLeft}
-          bind:label={$currentTimer.label} />
+          paused={$currentTimer.paused}
+          label={$currentTimer.label} />
       </div>
       <div class="TimerList-actions">
-        <button on:click={() => toggleView('currentTimer')}>Add timer</button>
-        <button on:click={() => (pauseTimer = !pauseTimer)}>
-          {pauseTimer ? 'Play' : 'Pause'}
+        <button
+          on:click={() => {
+            toggleView('keyPad');
+          }}>
+          Add timer
         </button>
-        <button on:click={() => currentTimer.remove()}>Delete</button>
+        <button on:click={() => currentTimer.togglePlayPause()}>
+          {$currentTimer.paused ? 'Play' : 'Pause'}
+        </button>
+        <button
+          on:click={() => {
+            toggleView('keyPad');
+            currentTimer.remove();
+          }}>
+          Delete
+        </button>
       </div>
     </div>
   {/if}
