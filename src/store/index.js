@@ -37,7 +37,7 @@ function createCurrentTimer() {
         clearInterval(timerInterval);
         timerInterval = setInterval(() => {
           if (!paused) {
-            setProperty("secondsLeft", secondsLeft--);
+            setProperty("secondsLeft", --secondsLeft);
           }
         }, 1000);
       }

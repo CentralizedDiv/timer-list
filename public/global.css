@@ -64,7 +64,7 @@ button {
 }
 
 @media only screen and (max-width: 767px) {
-  button {
+  * {
     cursor: auto !important;
   }
 }

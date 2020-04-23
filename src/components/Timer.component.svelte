@@ -78,7 +78,7 @@
       setTimeout(() => {
         line.style.transition = "stroke-dashoffset 1.2s ease-in-out";
         marker.style.transition = "transform 1.2s ease-in-out";
-      }, 999);
+      }, 500);
     }
   });
 
