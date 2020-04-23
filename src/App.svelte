@@ -109,6 +109,8 @@
       <div class="TimerList-timer">
         <Timer
           on:reset={currentTimer.reset}
+          on:clickTimer={currentTimer.togglePlayPause}
+          on:changeLabel={({ detail }) => currentTimer.setLabel(detail.label)}
           secondsLeft={$currentTimer.secondsLeft}
           totalSeconds={$currentTimer.totalSeconds}
           paused={$currentTimer.paused}

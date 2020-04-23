@@ -55,6 +55,10 @@
     }
   }
 
+  function handleClickTimer() {
+    dispatch("clickTimer");
+  }
+
   function handleReset() {
     dispatch("reset");
   }
@@ -88,7 +92,7 @@
     position: relative;
 
     &-back {
-      stroke: $color-white;
+      stroke: $color-cod-gray;
       stroke-width: 1;
       fill: transparent;
     }
@@ -98,7 +102,7 @@
       transform-origin: 50px 50px;
 
       stroke: $color-boston-blue;
-      stroke-width: 2;
+      stroke-width: 1;
       fill: transparent;
       stroke-linecap: round;
     }
@@ -119,6 +123,10 @@
       font-weight: 500;
       color: $color-boston-blue;
 
+      & > span {
+        cursor: pointer;
+      }
+
       &.isPaused {
         @include blink;
       }
@@ -132,6 +140,7 @@
     }
 
     &-labelButton {
+      font-size: 18px;
       color: $color-gray;
       position: absolute;
       left: calc(50% - 90px);
@@ -150,7 +159,7 @@
     <DialogInput
       on:cancel={() => (showDialogInput = false)}
       on:ok={({ detail }) => {
-        label = detail.label;
+        dispatch('changeLabel', { label: detail.label });
         showDialogInput = false;
       }}
       {label} />
@@ -158,11 +167,13 @@
   <svg width="300px" viewBox="-5 -5 110 110">
     <circle class="Timer-back" r="48.5" cx="50" cy="50" />
     <circle bind:this={line} class="Timer-line" r="48.5" cx="50" cy="50" />
-    <circle bind:this={marker} class="Timer-marker" r="3" cx="50" cy="1.5" />
+    <circle bind:this={marker} class="Timer-marker" r="2" cx="50" cy="1.5" />
   </svg>
   <button class="Timer-labelButton" on:click={() => (showDialogInput = true)}>
     {label || 'Label'}
   </button>
-  <div class="Timer-text" class:isPaused={paused}>{formatted}</div>
+  <div class="Timer-text" class:isPaused={paused}>
+    <span on:click={handleClickTimer}>{formatted}</span>
+  </div>
   <button class="Timer-resetButton" on:click={handleReset}>Reset</button>
 </div>
