@@ -10,7 +10,7 @@ const production = !process.env.ROLLUP_WATCH;
 export default {
   input: "src/main.js",
   output: {
-    sourcemap: true,
+    sourcemap: false,
     format: "iife",
     name: "app",
     file: "public/build/bundle.js",
@@ -18,7 +18,7 @@ export default {
   plugins: [
     svelte({
       // enable run-time checks when not in production
-      dev: !production,
+      dev: false,
       // we'll extract any component CSS out into
       // a separate file - better for performance
       css: (css) => {
