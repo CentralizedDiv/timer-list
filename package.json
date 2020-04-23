@@ -2,7 +2,7 @@
   "name": "timer-list",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c --no-sourcemap",
     "dev": "rollup -c -w",
     "start": "sirv public"
   },
